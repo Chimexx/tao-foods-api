@@ -3,7 +3,7 @@ const Order = require("../models/Order");
 const { verifyTokenAndAuthorisation, verifyTokenAndAdmin, verifyToken } = require("./verifyToken");
 
 //create order
-router.post("/new", verifyToken, async (req, res) => {
+router.post("/new", async (req, res) => {
 	const order = new Order(req.body);
 	try {
 		const savedOrder = await order.save();

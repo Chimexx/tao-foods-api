@@ -8,7 +8,7 @@ const DishSchema = new mongoose.Schema(
 		category: { type: Array },
 		inStock: { type: Boolean, default: true },
 		price: { type: Number, required: true },
-		requireSauce: { type: Boolean, required: true },
+		requireSauce: { type: Boolean, required: true, default: true },
 	},
 	{ timestamps: true }
 );
