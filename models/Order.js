@@ -7,6 +7,8 @@ const OrderSchema = new mongoose.Schema(
 		shipping: { type: Object, required: true },
 		instructions: { type: String },
 		status: { type: String, default: "pending" },
+		reference: { type: String },
+		paymentMethod: { type: String },
 	},
 	{ timestamps: true }
 );
