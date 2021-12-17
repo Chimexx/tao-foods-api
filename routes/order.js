@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Order = require("../models/Order");
 const { verifyTokenAndAuthorisation, verifyTokenAndAdmin, verifyToken } = require("./verifyToken");
 
-//create order
+//Create order
 router.post("/new", async (req, res) => {
 	const order = new Order(req.body);
 	try {
@@ -13,7 +13,7 @@ router.post("/new", async (req, res) => {
 	}
 });
 
-//get user order
+//Get user order
 router.get("/find/:userId", verifyTokenAndAuthorisation, async (req, res) => {
 	try {
 		const order = Order.findOne({ userId: req.params.userId });
@@ -23,7 +23,7 @@ router.get("/find/:userId", verifyTokenAndAuthorisation, async (req, res) => {
 	}
 });
 
-//update order
+//Update order
 router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
 		const updatedOrder = await Order.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
@@ -34,10 +34,10 @@ router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
 	}
 });
 
-//get order
+//Get order
 router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
-		const order = await Order.findById(req.params.id);
+		const order = await Order.findOne(req.params.id);
 		res.status(200).json(order);
 	} catch (error) {
 		res.status(500).json(error);
