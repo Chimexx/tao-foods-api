@@ -13,15 +13,15 @@ router.post("/new", async (req, res) => {
 	}
 });
 
-//Get user order
-router.get("/find/:userId", verifyTokenAndAuthorisation, async (req, res) => {
-	try {
-		const order = Order.findOne({ userId: req.params.userId });
-		res.status(200).json(order);
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+// //Get user order
+// router.get("/find/:userId", verifyTokenAndAuthorisation, async (req, res) => {
+// 	try {
+// 		const order = Order.findOne({ userId: req.params.userId });
+// 		res.status(200).json(order);
+// 	} catch (error) {
+// 		res.status(500).json(error);
+// 	}
+// });
 
 //Update Order
 router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
