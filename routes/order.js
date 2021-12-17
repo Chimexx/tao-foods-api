@@ -23,7 +23,7 @@ router.get("/find/:userId", verifyTokenAndAuthorisation, async (req, res) => {
 	}
 });
 
-//Update order
+//Update Order
 router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
 		const updatedOrder = await Order.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
@@ -35,7 +35,7 @@ router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //Get Order
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+router.get("/find/:id", async (req, res) => {
 	try {
 		const order = await Order.findById(req.params.id);
 		res.status(200).json(order);
