@@ -34,6 +34,16 @@ router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
 	}
 });
 
+//get order
+router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+	try {
+		const order = await Order.findById(req.params.id);
+		res.status(200).json(order);
+	} catch (error) {
+		res.status(500).json(error);
+	}
+});
+
 //Delete Order
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
