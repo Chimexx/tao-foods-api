@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Dish = require("../models/Dish");
 const { verifyTokenAndAdmin } = require("./verifyToken");
 
-//create dish
+//Create dish
 router.post("/new", verifyTokenAndAdmin, async (req, res) => {
 	const dish = new Dish(req.body);
 	try {
@@ -13,7 +13,7 @@ router.post("/new", verifyTokenAndAdmin, async (req, res) => {
 	}
 });
 
-//get dish
+//Get dish
 router.get("/find/:id", async (req, res) => {
 	try {
 		const dish = await Dish.findById(req.params.id);
@@ -23,8 +23,8 @@ router.get("/find/:id", async (req, res) => {
 	}
 });
 
-//update dish
-router.get("/:id", verifyTokenAndAdmin, async (req, res) => {
+//Update dish
+router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
 	try {
 		const updatedDish = await Dish.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
 		res.status(200).json(updatedDish);
