@@ -1,8 +1,12 @@
 const User = require("../models/User");
-const { verifyTokenAndAuthorisation, verifyTokenAndAdmin } = require("./verifyToken");
+const {
+	verifyTokenAndAuthorisation,
+	verifyTokenAndAdmin,
+	verifyTokenAdminAndManager,
+} = require("./verifyToken");
 const router = require("express").Router();
 
-//update
+//Update User
 router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 	if (req.body.password) {
 		req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_SECRET).toString();
@@ -16,7 +20,7 @@ router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 	}
 });
 
-//delete a user
+//Delete User
 router.delete("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 	try {
 		await User.findByIdAndDelete(req.params.id);
@@ -26,8 +30,8 @@ router.delete("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 	}
 });
 
-//get a user
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+//Get User
+router.get("/find/:id", verifyTokenAdminAndManager, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 		const { password, ...others } = user._doc;
@@ -37,7 +41,7 @@ router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
 	}
 });
 
-//get all users
+//get Users
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
 	const query = req.query.new;
 	try {
