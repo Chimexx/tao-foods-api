@@ -42,7 +42,7 @@ router.get("/find/:id", verifyTokenAdminAndManager, async (req, res) => {
 });
 
 //get Users
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", verifyTokenAdminAndManager, async (req, res) => {
 	const query = req.query.new;
 	try {
 		const users = query ? await User.find().sort({ _id: -1 }).limit(10) : await User.find();
