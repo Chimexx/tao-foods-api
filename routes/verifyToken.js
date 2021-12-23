@@ -21,7 +21,7 @@ const verifyToken = (req, res, next) => {
 
 const verifyTokenAndAuthorisation = (req, res, next) => {
 	verifyToken(req, res, () => {
-		if (req.user.id === req.params.id || req.user.isAdmin) {
+		if (req.user.id === req.params.id || req.user.role === "admin") {
 			next();
 		} else {
 			res.status(403).json("You lack access for this");
@@ -31,7 +31,7 @@ const verifyTokenAndAuthorisation = (req, res, next) => {
 
 const verifyTokenAndAdmin = (req, res, next) => {
 	verifyToken(req, res, () => {
-		if (req.user.isAdmin) {
+		if (req.user.role === "admin") {
 			next();
 		} else {
 			res.status(403).json("You are not authorised for this action");
@@ -40,7 +40,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
 };
 const verifyTokenAdminAndManager = (req, res, next) => {
 	verifyToken(req, res, () => {
-		if (req.user.isAdmin || req.user.isManager) {
+		if (req.user.role === "admin" || req.user.role === "manager") {
 			next();
 		} else {
 			res.status(403).json("You are not authorised for this action");
