@@ -2,7 +2,7 @@ const User = require("../models/User");
 const {
 	verifyTokenAndAuthorisation,
 	verifyTokenAndAdmin,
-	verifyTokenAdminAndManager,
+	verifyTokenAndAdminManager,
 } = require("./verifyToken");
 const router = require("express").Router();
 
@@ -21,7 +21,11 @@ router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 });
 
 //Delete User
-router.delete("/:id", verifyTokenAndAuthorisation, async (req, res) => {
+router.delete("/:id", verifyTokenAndAdminManager, async (req, res) => {
+	const user = await User.findById(req.params.id);
+	if (user.role === "admin") {
+		res.status(403).json("You can't delete an Admin");
+	}
 	try {
 		await User.findByIdAndDelete(req.params.id);
 		res.status(200).json("User deleted");
@@ -31,7 +35,7 @@ router.delete("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 });
 
 //Get User
-router.get("/find/:id", verifyTokenAdminAndManager, async (req, res) => {
+router.get("/find/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 		const { password, ...others } = user._doc;
@@ -42,11 +46,9 @@ router.get("/find/:id", verifyTokenAdminAndManager, async (req, res) => {
 });
 
 //get Users
-router.get("/", verifyTokenAdminAndManager, async (req, res) => {
-	const query = req.query.new;
+router.get("/", verifyTokenAndAdminManager, async (req, res) => {
 	try {
-		const users = query ? await User.find().sort({ _id: -1 }).limit(10) : await User.find();
-
+		const users = await User.find();
 		res.status(200).json(users);
 	} catch (error) {
 		res.status(500).json(error);

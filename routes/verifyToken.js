@@ -8,7 +8,7 @@ const verifyToken = (req, res, next) => {
 
 		jwt.verify(token, process.env.JWT_KEY, (err, user) => {
 			if (err) {
-				res.status(403).json("Token is invalid");
+				res.status(403).json("Token is not valid");
 			} else {
 				req.user = user;
 				next();
@@ -21,10 +21,10 @@ const verifyToken = (req, res, next) => {
 
 const verifyTokenAndAuthorisation = (req, res, next) => {
 	verifyToken(req, res, () => {
-		if (req.user.id === req.params.id || req.user.role === "admin") {
+		if (req.user.id === req.params.id || req.user.isAdmin) {
 			next();
 		} else {
-			res.status(403).json("You lack access for this");
+			res.status(403).json("You dont have access for this");
 		}
 	});
 };
@@ -38,7 +38,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
 		}
 	});
 };
-const verifyTokenAdminAndManager = (req, res, next) => {
+const verifyTokenAndAdminManager = (req, res, next) => {
 	verifyToken(req, res, () => {
 		if (req.user.role === "admin" || req.user.role === "manager") {
 			next();
@@ -50,7 +50,7 @@ const verifyTokenAdminAndManager = (req, res, next) => {
 
 module.exports = {
 	verifyToken,
-	verifyTokenAndAuthorisation,
-	verifyTokenAdminAndManager,
 	verifyTokenAndAdmin,
+	verifyTokenAndAdminManager,
+	verifyTokenAndAuthorisation,
 };

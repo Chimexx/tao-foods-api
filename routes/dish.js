@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const Dish = require("../models/Dish");
-const { verifyTokenAndAdmin } = require("./verifyToken");
+const { verifyTokenAndAdminManager } = require("./verifyToken");
 
 //Create dish
-router.post("/new", verifyTokenAndAdmin, async (req, res) => {
+router.post("/new", verifyTokenAndAdminManager, async (req, res) => {
 	const dish = new Dish(req.body);
 	try {
 		const savedDish = await dish.save();
@@ -24,7 +24,7 @@ router.get("/find/:id", async (req, res) => {
 });
 
 //Update dish
-router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
+router.put("/update/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const updatedDish = await Dish.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
 		res.status(200).json(updatedDish);
@@ -34,7 +34,7 @@ router.put("/update/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //Delete dish
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.delete("/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		await Dish.findByIdAndDelete(req.params.id);
 		res.status(200).json("Dish deleted");
