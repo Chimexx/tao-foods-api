@@ -8,6 +8,12 @@ const router = require("express").Router();
 
 //Update User
 router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
+	const user = await User.findById(req.params.id);
+
+	if (user.role === "admin") {
+		res.status(403).json("You can't delete an Admin");
+	}
+
 	if (req.body.password) {
 		req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_SECRET).toString();
 	}
