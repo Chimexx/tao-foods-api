@@ -8,17 +8,17 @@ const router = require("express").Router();
 
 //Update User
 router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
-	const user = await User.findById(req.params.id);
-
-	if (user.role === "admin") {
-		res.status(403).json("You can't delete an Admin");
-	}
-
-	if (req.body.password) {
-		req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PASSWORD_SECRET).toString();
-	}
-
 	try {
+		const user = await User.findById(req.params.id);
+		user.role === "admin" && res.status(403).json("You can't update an admin account");
+
+		if (req.body.password) {
+			req.body.password = CryptoJS.AES.encrypt(
+				req.body.password,
+				process.env.PASSWORD_SECRET
+			).toString();
+		}
+
 		const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
 		res.status(200).json(updatedUser);
 	} catch (error) {
@@ -28,11 +28,10 @@ router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
 
 //Delete User
 router.delete("/:id", verifyTokenAndAdminManager, async (req, res) => {
-	const user = await User.findById(req.params.id);
-	if (user.role === "admin") {
-		res.status(403).json("You can't delete an Admin");
-	}
 	try {
+		const user = await User.findById(req.params.id);
+		user.role === "admin" && res.status(403).json("You can't delete an Admin");
+
 		await User.findByIdAndDelete(req.params.id);
 		res.status(200).json("User deleted");
 	} catch (error) {
