@@ -61,7 +61,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //Get All Orders
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
 	try {
 		const orders = await Order.find();
 
