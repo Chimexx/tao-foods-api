@@ -10,18 +10,26 @@ const router = require("express").Router();
 router.put("/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
-		user.role === "admin" && res.status(403).json("You can't update an admin account");
-
-		if (req.body.password) {
-			req.body.password = CryptoJS.AES.encrypt(
-				req.body.password,
-				process.env.PASSWORD_SECRET
-			).toString();
+		if (user) {
+			if (user.role === "admin") {
+				res.status(403).json("You can't update an admin account");
+			} else {
+				if (req.body.password) {
+					req.body.password = CryptoJS.AES.encrypt(
+						req.body.password,
+						process.env.PASSWORD_SECRET
+					).toString();
+				}
+				const updatedUser = await User.findByIdAndUpdate(
+					req.params.id,
+					{ $set: req.body },
+					{ new: true }
+				);
+				res.status(200).json(updatedUser);
+			}
 		}
-
-		const updatedUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-		res.status(200).json(updatedUser);
 	} catch (error) {
+		console.log(error);
 		res.status(500).json(error);
 	}
 });
