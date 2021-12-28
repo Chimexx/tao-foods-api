@@ -7,7 +7,7 @@ const {
 const router = require("express").Router();
 
 //Update User
-router.put("/:id", verifyTokenAndAuthorisation, async (req, res) => {
+router.put("/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 		user.role === "admin" && res.status(403).json("You can't update an admin account");
