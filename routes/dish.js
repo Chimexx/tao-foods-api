@@ -24,7 +24,7 @@ router.get("/find/:id", async (req, res) => {
 });
 
 //Update dish
-router.put("/update/:id", verifyTokenAndAdminManager, async (req, res) => {
+router.put("/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const updatedDish = await Dish.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
 		res.status(200).json(updatedDish);
