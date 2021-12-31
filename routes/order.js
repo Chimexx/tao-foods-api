@@ -70,8 +70,9 @@ router.get("/", async (req, res) => {
 		res.status(500).json(error);
 	}
 });
-//Get Orders stats
-router.get("/stats", async (req, res) => {
+
+//Get income stats
+router.get("/income-stats", async (req, res) => {
 	const date = new Date();
 	const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
 	const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
@@ -94,6 +95,23 @@ router.get("/stats", async (req, res) => {
 		]);
 
 		res.status(200).json(income);
+	} catch (error) {
+		res.status(500).json(error);
+	}
+});
+//Get order stats
+router.get("/order-stats", async (req, res) => {
+	const date = new Date();
+	const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+
+	try {
+		const data = await Order.aggregate([
+			{ $match: { createdAt: { $gte: lastYear } } },
+			{ $project: { month: { $month: "$createdAt" } } },
+			{ $group: { _id: "$month", total: { $sum: 1 } } },
+		]);
+
+		res.status(200).json(data);
 	} catch (error) {
 		res.status(500).json(error);
 	}
