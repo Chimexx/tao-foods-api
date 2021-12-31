@@ -38,8 +38,8 @@ router.post("/login", async (req, res) => {
 					id: user._id,
 					role: user.role,
 				},
-				process.env.JWT_KEY,
-				{ expiresIn: "2d" }
+				process.env.JWT_KEY
+				// { expiresIn: "2d" }
 			);
 			const { password, ...others } = user._doc;
 			res.status(200).json({ ...others, accessToken });
