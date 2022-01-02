@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const CryptoJS = require("crypto-js");
 const {
 	verifyTokenAndAuthorisation,
 	verifyTokenAndAdmin,
@@ -11,9 +12,7 @@ router.put("/:id", verifyTokenAndAdminManager, async (req, res) => {
 	try {
 		const user = await User.findById(req.params.id);
 		if (user) {
-			if (user.role === "admin") {
-				res.status(403).json("You can't update an admin account");
-			} else {
+			if (req.body.currentUserRole === "admin") {
 				if (req.body.password) {
 					req.body.password = CryptoJS.AES.encrypt(
 						req.body.password,
@@ -26,6 +25,8 @@ router.put("/:id", verifyTokenAndAdminManager, async (req, res) => {
 					{ new: true }
 				);
 				res.status(200).json(updatedUser);
+			} else if (req.body.currentUserRole !== "admin" && user.role === "admin") {
+				res.status(403).json("You can't update an admin account");
 			}
 		}
 	} catch (error) {

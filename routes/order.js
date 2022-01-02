@@ -75,9 +75,7 @@ router.get("/", async (req, res) => {
 router.get("/income-stats", async (req, res) => {
 	const date = new Date();
 	const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-	const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
-
-	console.log(lastMonth, previousMonth);
+	// const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
 	try {
 		const income = await Order.aggregate([
